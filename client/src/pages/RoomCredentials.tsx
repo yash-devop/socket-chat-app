@@ -1,13 +1,24 @@
-import React from "react";
+import React, { useState } from "react";
 
+import Avatar from '../assets/avatar.svg'
+type AvatarImage = string
 const RoomCredentials = () => {
+  const [image , setImage] = useState("");
+
+  const handleImage=(e:React.ChangeEvent<HTMLInputElement>)=>{
+     e.preventDefault();
+     if(e.target.files && e.target.files.length > 0){
+       const link = URL.createObjectURL(e.target.files[0]);
+       setImage(link)
+     }
+  }
   return (
     <div className="w-full flex flex-col items-center p-6 md:p-20">
       <div className="w-full flex flex-col items-center gap-10 ">
         <div className=" w-full flex flex-col gap-2">
-          <div className="size-20 bg-primary-avatar rounded-full">
-            <input type="file" hidden />
-          </div>
+          
+          <img src={image || Avatar } alt="" onClick={()=>document.getElementById("avatar_img")?.click()} className={`size-20 ${!image && "p-4"} bg-primary-avatar rounded-full object-cover cursor-pointer`} />
+            <input type="file" hidden id="avatar_img" onChange={(e)=>handleImage(e)}/>
           <p className="text-lg font-bold">Add Avatar</p>
           <p className="w-full text-black/30 text-sm font-medium max-w-sm">
             Add your custom avatar or our app will automatically add random
