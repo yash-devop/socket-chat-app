@@ -9,13 +9,13 @@ const RoomCredentials = () => {
             <input type="file" hidden />
           </div>
           <p className="text-lg font-bold">Add Avatar</p>
-          <p className="w-full text-black/30 text-sm font-semibold max-w-sm">
+          <p className="w-full text-black/30 text-sm font-medium max-w-sm">
             Add your custom avatar or our app will automatically add random
             avatar for you
           </p>
         </div>
-        <div className="w-full flex flex-col gap-2 md:gap-5">
-          <label className="text-lg font-semibold" htmlFor="username">
+        <div className="w-full flex flex-col gap-2 md:gap-4">
+          <label className="text-base font-semibold" htmlFor="username">
             Username
           </label>
           <input
@@ -24,7 +24,7 @@ const RoomCredentials = () => {
             name=""
             id="username"
           />
-          <label className="text-lg font-semibold" htmlFor="roomId">
+          <label className="text-base font-semibold" htmlFor="roomId">
             Room ID
           </label>
           <input
