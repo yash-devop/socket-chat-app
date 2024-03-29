@@ -1,3 +1,4 @@
+"use strict";
 // import { Socket } from "socket.io";
 // // 1.) io connection : 
 // io.on("connection",(socket:Socket)=>{
