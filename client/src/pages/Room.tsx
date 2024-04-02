@@ -1,9 +1,12 @@
 import React from "react";
+import ChatHeader from "../components/ChatHeader";
 
 const Room = () => {
   return (
     <>
-      <div></div>
+      <div className="w-full">
+         <ChatHeader />
+      </div>
     </>
   );
 };
