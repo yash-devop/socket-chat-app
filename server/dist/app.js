@@ -10,7 +10,7 @@ const test_1 = __importDefault(require("./routes/test"));
 const app = (0, express_1.default)();
 app.use(express_1.default.json());
 app.use((0, cors_1.default)({
-    origin: ["http://localhost:5173", "http://localhost:3000"],
+    origin: ["http://localhost:5173/", "http://localhost:3000"],
     credentials: true
 }));
 app.use("/", test_1.default);
