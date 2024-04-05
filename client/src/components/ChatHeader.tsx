@@ -10,12 +10,12 @@ const ChatHeader = () => {
     <div className='flex items-center justify-between w-full border-b px-2'>
       <div className='flex items-center -space-x-5 w-full'>
         {showUsers.map((user, index) => (
-          <div key={index} className={`rounded-full border border-black size-14 bg-primary-avatar flex items-center justify-center`}>
+          <div key={index} className={`rounded-full border border-black size-10 bg-primary-avatar flex items-center justify-center`}>
             <img src="" alt="" />
           </div>
         ))}
         {users.length > 5 && (
-          <div className={`border border-black rounded-full size-14 bg-primary-avatar flex items-center justify-center text-lg font-medium`}>
+          <div className={`border border-black rounded-full size-10 bg-primary-avatar flex items-center justify-center text-lg font-medium`}>
             <p>+{remainingUsers}</p>
           </div>
         )}
