@@ -4,7 +4,7 @@ const MAX_SIZE = 500000;
 const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
 export const RoomSchema = z.object({
     username: z.string().min(8,{
-        message: "Username can't be more than 8 characters"
+        message: "Username Should be of 8 characters"
     }).max(8,{
         message: "Username can't be more than 8 characters"
     }).trim(),
