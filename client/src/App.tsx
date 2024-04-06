@@ -13,7 +13,7 @@ export default function App() {
   return (
     <Layout>
       <Routes>
-        <Route path="/" element={<RoomCredentials />} />
+        <Route path="/" element={<RoomCredentials socket={socket}/>} />
         <Route path="/room/:id" element={<Room />} />
       </Routes>
     </Layout>
