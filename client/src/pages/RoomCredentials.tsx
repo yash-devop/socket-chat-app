@@ -1,4 +1,4 @@
-import React, { FormEvent, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import Avatar from '../assets/avatar.svg'
 import { FieldValues, useForm } from 'react-hook-form'
@@ -6,11 +6,12 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { RoomSchema } from "../lib/validation";
 import { z } from "zod";
 import { Socket } from "socket.io-client";
+import { useNavigate } from "react-router-dom";
 type AvatarImage = string
 type CredentialType = {
   roomID: string,
   username: string,
-  profile_image: File | null
+  profileImage: File | null
 }
 
 type RoomCredentialsProps = {
@@ -18,18 +19,15 @@ type RoomCredentialsProps = {
 }
 type RoomSchemaType = z.infer<typeof RoomSchema>;
 
-
-
-
-
 const RoomCredentials = ({
   socket
 }: RoomCredentialsProps) => {
+  const navigate = useNavigate()
   const [image, setImage] = useState("");
   const [credentials, setCredentials] = useState<CredentialType>({
     roomID: "",
     username: "",
-    profile_image: null
+    profileImage: null
   });
 
   const { register, handleSubmit,
@@ -53,11 +51,19 @@ const RoomCredentials = ({
     if (e.target.files && e.target.files.length > 0) {
       const link: AvatarImage = URL.createObjectURL(e.target.files[0]);
       setImage(link)
-      setCredentials({ ...credentials, profile_image: e.target.files[0] })
+      setCredentials({ ...credentials, profileImage: e.target.files[0] })
     }
   }
 
-  console.log("image in hook", credentials)
+  //socket listeners
+  useEffect(()=>{
+    socket.on("JOINED_ROOM_SUCCESS",(roomID)=>{
+      console.log(roomID);
+      navigate(`/room/${roomID}`)
+    })
+  },[])
+
+
   return (
     <div className="w-full flex flex-col items-center p-6 md:p-20">
       <form noValidate onSubmit={handleSubmit(handleJoinRoom)} className="w-full flex flex-col items-center gap-10 ">
@@ -100,10 +106,10 @@ const RoomCredentials = ({
             className="border outline-none focus:ring-2 p-2 md:p-3 rounded-lg"
             type="text"
             id="roomId"
-            {...register("roomId")}
+            {...register("roomID")}
           />
           {
-            errors.roomId && <div className="text-red-400">{errors.roomId.message}</div>
+            errors.roomID && <div className="text-red-400">{errors.roomID.message}</div>
           }
         </div>
 

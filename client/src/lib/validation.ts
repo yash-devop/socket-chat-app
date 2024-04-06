@@ -8,7 +8,7 @@ export const RoomSchema = z.object({
     }).max(8,{
         message: "Username can't be more than 8 characters"
     }).trim(),
-    roomId: z.string().min(6,{
+    roomID: z.string().min(6,{
                 message: "Please Enter Valid RoomID"
             }).max(6,{
                 message: "RoomID can't be more than 6 characters"

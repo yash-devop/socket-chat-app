@@ -1,0 +1,1 @@
+export  const APIURL = import.meta.env.VITE_REACT_APP_BACKENDURL

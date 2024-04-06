@@ -1,6 +1,8 @@
-import React from 'react';
+type ChatHeaderProps = {
+  roomID: string | undefined
+}
 
-const ChatHeader = () => {
+const ChatHeader = ({roomID}:ChatHeaderProps) => {
   const users = [1, 2, 3, 4, 5,6];
   const showUsers = users.slice(0, 5);
   const remainingUsers = users.length > 5 ? users.length - 5 : 0;
@@ -22,7 +24,7 @@ const ChatHeader = () => {
       </div>
       <div className='flex flex-col items-end  w-full max-w-xs'>
           <p className='font-mono text-sm '>Room name</p>
-          <p className='font-semibold text-xl tracking-tight'># JOD GANG</p>
+          <p className='font-semibold text-xl tracking-tight'># <span className='capitalize'> {roomID}</span></p>
       </div>
     </div>
     </>
