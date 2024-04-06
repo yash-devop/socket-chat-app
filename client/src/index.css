@@ -14,3 +14,33 @@
 *{
     font-family: "Helvetica";
 }
+
+
+@keyframes movingGradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.animate-gradient {
+  animation: movingGradient 60s linear infinite;
+  background: linear-gradient(
+    45deg,
+    #3498db,
+    #9b59b6,
+    #e91e63,
+    #2196f3,
+    #ff4081,
+    #f39c12,
+    #8e44ad,
+    #2ecc71,
+    #e74c3c
+  );
+  background-size: 400% 400%;
+}
