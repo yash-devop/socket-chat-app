@@ -1,5 +1,5 @@
 type ChatHeaderProps = {
-  roomID: string | undefined
+  roomID: string;
 }
 
 const ChatHeader = ({roomID}:ChatHeaderProps) => {
