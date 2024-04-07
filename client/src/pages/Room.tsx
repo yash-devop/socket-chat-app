@@ -19,17 +19,20 @@ type RoomProps = {
 };
 
 type MessageDataType = {
-  date: Date,
+  date: string,
   type: string,
+  socketID:string,
   message: { 
     text: string,
     username: string,
-    profileImage: string //can change
+    profileImage: ArrayBuffer[] //can change
   }  
 }
 
 const Room = ({ socket }: RoomProps) => {
   const { roomID } = useParams<RoomParams>();
+  if(roomID == undefined ){ return}
+
   const [allMessage, setAllMessage] = useState<MessageDataType[]>([]);
 
   useEffect(() => {
@@ -46,13 +49,16 @@ const Room = ({ socket }: RoomProps) => {
       <div className="w-full h-screen max-h-screen overflow-auto flex flex-col items-center gap-2 px-2 md:px-7 py-3">
         <ChatHeader roomID={roomID} />
         {/* MESSAGE AREA */}
-        <div className="w-full flex-1 overflow-auto border flex flex-col items-center gap-1 p-2">
+        <div className="w-full flex-1 overflow-auto border flex flex-col items-end gap-1 p-2">
           {allMessage.length >0 && allMessage.map((message) => {
+            console.log("message", message);
+            
           if(  message.type === "ROOM_NOTIFICATION") { return <RoomNotifications text={message.message.text}/>}
+          if(  message.type === "MESSAGE") { if(message.socketID === socket.id){return <SenderChat {...message}/> } else{return <ParticipantChat {...message}/>} }
           })}
         </div>
         <div className="w-full h-full max-h-[50px]">
-          <InputMessage />
+          <InputMessage roomID={roomID} socket ={socket}/>
         </div>
       </div>
     </>
