@@ -6,6 +6,12 @@ type JoinRoomProps = {
     username: string,
     profileImage: File | null
 }
+type Message = {
+    roomID : string,
+    message: {
+        senderMessage: string,
+    },
+}
 type TUserDummyDB = {
     [roomID:string]:{
         socketId: string,
@@ -64,10 +70,42 @@ io.on("connection",(socket:Socket)=>{
             socket.join(roomID);
 
             socket.emit("JOINED_ROOM_SUCCESS",roomID);
-            
+
+            io.to(roomID).emit("ROOM_MESSAGES",{
+                date: Date.now(),
+                socketID: socket.id,
+                message: {
+                    text: `${username} has joined the room`,
+                    username,
+                    profileImage
+                },
+                type: "ROOM_NOTIFICATION"
+            })
         }
         console.log('MyDB',UserDummyDB);
     });
+    socket.on("SENDER_MESSAGE",(messageData:Message)=>{
+        const {roomID , message:{senderMessage }} = messageData;
+        const user = UserDummyDB[roomID].find((user)=>{
+            return user.socketId === socket.id
+        })
+    
+        // const buffer = Buffer.from(user?.profileImage["0"]);
+
+        console.log('message aayaa re db ka' ,user, "message is :", senderMessage);
+
+        io.to(roomID).emit("ROOM_MESSAGES",{
+            date: Date.now(),
+            socketID: socket.id,
+            message: {
+                text: senderMessage,
+                username : user?.username,
+                profileImage : user?.profileImage
+            },
+            type: "MESSAGE"
+        })
+
+    })
 });
 
 
