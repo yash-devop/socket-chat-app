@@ -1,32 +1,67 @@
-type ChatHeaderProps = {
-  roomID: string;
-}
+import { useEffect, useState } from "react";
+import { Socket } from "socket.io-client";
 
-const ChatHeader = ({roomID}:ChatHeaderProps) => {
-  const users = [1, 2, 3, 4, 5,6];
+type ChatHeaderProps = {
+  socket: Socket;
+  roomID: string;
+};
+
+type UsersDataType = {
+  socketId: string;
+  username: string;
+  profileImage: ArrayBuffer[];
+}[];
+
+const ChatHeader = ({ roomID, socket }: ChatHeaderProps) => {
+  const [users, setUsers] = useState<UsersDataType>([]);
   const showUsers = users.slice(0, 5);
   const remainingUsers = users.length > 5 ? users.length - 5 : 0;
 
+  useEffect(() => {
+    socket.on("ACTIVE_USERS", (users: UsersDataType) => {
+      setUsers(users);
+    });
+  }, []);
+
+  console.log("user", users);
+  console.log("userShow", showUsers);
+
+  const createUrl = (arrayBuffer: ArrayBuffer) => {
+    const uint8Array = new Uint8Array(arrayBuffer);
+    const blob = new Blob([uint8Array], { type: "image/jpeg" });
+    const urlCreator = window.URL || window.webkitURL;
+    const imageUrl = urlCreator.createObjectURL(blob);
+    return imageUrl;
+  };
+
   return (
     <>
-    <div className='flex items-center justify-between w-full border-b px-2'>
-      <div className='flex items-center -space-x-5 w-full'>
-        {showUsers.map((user, index) => (
-          <div key={index} className={`rounded-full border border-black size-10 bg-primary-avatar flex items-center justify-center`}>
-            <img src="" alt="" />
-          </div>
-        ))}
-        {users.length > 5 && (
-          <div className={`border border-black rounded-full size-10 bg-primary-avatar flex items-center justify-center text-lg font-medium`}>
-            <p>+{remainingUsers}</p>
-          </div>
-        )}
+      <div className="flex items-center justify-between w-full border-b px-2">
+        <div className="flex items-center -space-x-5 w-full">
+          {showUsers.map((user, index) => (
+            <div
+              key={index}
+              className="rounded-full border border-black size-10 bg-primary-avatar flex items-center justify-center"
+            >
+              <img className="rounded-full size-10 object-cover" src={createUrl(user.profileImage[0])} alt="" />
+            </div>
+          ))}
+
+          {users.length > 5 && (
+            <div
+              className={`border border-black rounded-full size-10 bg-black/80 flex items-center justify-center text-white text-lg font-medium`}
+            >
+              <p>+{remainingUsers}</p>
+            </div>
+          )}
+        </div>
+        <div className="flex flex-col items-end  w-full max-w-xs">
+          <p className="font-mono text-sm ">Room name</p>
+          <p className="font-semibold text-xl tracking-tight">
+            # <span className="capitalize"> {roomID}</span>
+          </p>
+        </div>
       </div>
-      <div className='flex flex-col items-end  w-full max-w-xs'>
-          <p className='font-mono text-sm '>Room name</p>
-          <p className='font-semibold text-xl tracking-tight'># <span className='capitalize'> {roomID}</span></p>
-      </div>
-    </div>
     </>
   );
 };
