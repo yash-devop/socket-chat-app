@@ -40,7 +40,8 @@ const io = new Server(expressServer,{
    ]
 */
 
-const UserDummyDB:TUserDummyDB = {}
+let UserDummyDB:TUserDummyDB = {}
+
 
 // 1.) io connection : 
 io.on("connection",(socket:Socket)=>{
@@ -48,13 +49,7 @@ io.on("connection",(socket:Socket)=>{
     const socketId = socket.id
     socket.on("join_room",(userCredentials:JoinRoomProps)=>{
         const {profileImage,roomID,username} = userCredentials
-        console.log('Data',{
-            profileImage,
-            roomID,
-            username
-        });
-        
-        
+
         // Store the User in DB :
         if(userCredentials){
             if (!UserDummyDB[roomID]) {
@@ -82,17 +77,22 @@ io.on("connection",(socket:Socket)=>{
                 type: "ROOM_NOTIFICATION"
             })
         }
-        console.log('MyDB',UserDummyDB);
+
+
+        const GetAllUsersFromRoom = UserDummyDB[roomID];
+
+        io.to(roomID).emit("ACTIVE_USERS",GetAllUsersFromRoom)
+
     });
     socket.on("SENDER_MESSAGE",(messageData:Message)=>{
         const {roomID , message:{senderMessage }} = messageData;
-        const user = UserDummyDB[roomID].find((user)=>{
+        // get user
+        const user = UserDummyDB[roomID]?.find((user)=>{
             return user.socketId === socket.id
         })
     
         // const buffer = Buffer.from(user?.profileImage["0"]);
 
-        console.log('message aayaa re db ka' ,user, "message is :", senderMessage);
 
         io.to(roomID).emit("ROOM_MESSAGES",{
             date: Date.now(),
@@ -104,6 +104,57 @@ io.on("connection",(socket:Socket)=>{
             },
             type: "MESSAGE"
         })
+
+    });
+
+
+
+    socket.on("disconnecting",()=>{
+        for (const roomID in UserDummyDB) {
+            const usersInRoom = UserDummyDB[roomID];
+            for (const user of usersInRoom) {
+                if (user.socketId === socketId) {
+                    const user = UserDummyDB[roomID]?.find((user)=>{
+                        return user.socketId === socket.id
+                    })
+                    io.to(roomID).emit("ROOM_MESSAGES",{
+                        date: Date.now(),
+                        socketID: socket.id,
+                        message: {
+                            text: `${user?.username} has left the room`,
+                            username: user?.username,
+                            profileImage: user?.profileImage
+                        },
+                        type: "ROOM_NOTIFICATION"
+                    })
+                    socket.leave(roomID)
+                    
+                    UserDummyDB[roomID] = UserDummyDB[roomID]?.filter((user)=>user.socketId !== socket.id)
+
+
+
+                    io.to(roomID).emit("ROOM_MESSAGES",{
+                        date: Date.now(),
+                        socketID: socket.id,
+                        message: {
+                            text: `${user?.username} has left the room`,
+                            username: user?.username,
+                            profileImage: user?.profileImage
+                        },
+                        type: "ROOM_NOTIFICATION"
+                    })
+
+                    const GetAllUsersFromRoom = UserDummyDB[roomID];
+
+                    console.log('Remaining USERs' , GetAllUsersFromRoom);
+
+                    io.to(roomID).emit("ACTIVE_USERS",GetAllUsersFromRoom)
+
+                    
+                }
+            }
+        }
+        
 
     })
 });
