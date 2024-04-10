@@ -24,7 +24,7 @@ const expressServer = app.listen(8000,()=>{
 })
 const io = new Server(expressServer,{
     cors:{
-        origin: "http://localhost:5173",
+        origin: ["http://localhost:5173","https://blinkchat-ten.vercel.app"],
         // credentials: true
     }
 });
