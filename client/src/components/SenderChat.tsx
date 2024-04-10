@@ -11,7 +11,7 @@ type MessageDataType = {
   };
 };
 
-const SenderChat = ({date ,message:{text,username,profileImage} ,socketID, type}:MessageDataType) => {
+const SenderChat = ({date ,message:{text,username,profileImage}}:MessageDataType) => {
 
   const profileImageUint8Array = new Uint8Array(profileImage[0]);
   const profileImageBlob = new Blob([profileImageUint8Array]);
