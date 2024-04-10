@@ -21,7 +21,7 @@ const SenderChat = ({date ,message:{text,username,profileImage}}:MessageDataType
     <div className="w-full flex justify-end">
       <div className="flex flex-col items-center gap-1 max-w-[50%]">
         <div className="w-full flex gap-2 items-center justify-end text-xs">
-          <img src={profileImageUrl} className="size-6 rounded-full bg-[#c2c2c2]"/>
+          <img src={profileImageUrl} className="size-6 object-cover rounded-full bg-[#c2c2c2]"/>
           <p>{username}</p>
         </div>
         <div className="w-full px-4 py-3 bg-[#f3f3f3] font-light border border-[#c2c2c2] rounded-l-[12px] rounded-br-[12px]">
