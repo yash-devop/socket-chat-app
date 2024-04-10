@@ -117,16 +117,6 @@ io.on("connection",(socket:Socket)=>{
                     const user = UserDummyDB[roomID]?.find((user)=>{
                         return user.socketId === socket.id
                     })
-                    io.to(roomID).emit("ROOM_MESSAGES",{
-                        date: Date.now(),
-                        socketID: socket.id,
-                        message: {
-                            text: `${user?.username} has left the room`,
-                            username: user?.username,
-                            profileImage: user?.profileImage
-                        },
-                        type: "ROOM_NOTIFICATION"
-                    })
                     socket.leave(roomID)
                     
                     UserDummyDB[roomID] = UserDummyDB[roomID]?.filter((user)=>user.socketId !== socket.id)
@@ -150,7 +140,6 @@ io.on("connection",(socket:Socket)=>{
 
                     io.to(roomID).emit("ACTIVE_USERS",GetAllUsersFromRoom)
 
-                    
                 }
             }
         }
